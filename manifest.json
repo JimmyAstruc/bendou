@@ -1,0 +1,7 @@
+{
+  "name": "bendou-app",
+  "short_name": "bendou-app",
+  "description": "Website about a photography project",
+  "start_url": "/",
+  "display": "standalone"
+}
