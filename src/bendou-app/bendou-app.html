@@ -7,9 +7,8 @@
         display: block;
       }
     </style>
-    <h2>Hello [[prop1]]!</h2>
+    <h2 id="fuck">Hello [[prop1]]!</h2>
   </template>
-
   <script>
     /**
      * @customElement
@@ -24,6 +23,18 @@
             value: 'bendou-app'
           }
         };
+
+        ready() {
+
+        }
+
+        ready() {
+          super.ready();
+          Polymer.RenderStatus.afterNextRender(this,function() {
+
+          });
+
+        }
       }
     }
 
