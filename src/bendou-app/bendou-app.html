@@ -29,26 +29,24 @@
                 z-index: 0;
 
                 /*Sizing*/
-                min-width: 101vw;
-                top: -33vh;
+                min-width: 600vh;
+                bottom: -20vh;
                 min-height: 100vh;
                 max-height: 1000vh;
+                margin: auto;
+                left:0px;
+                right:auto;
 
                 /*Animation*/
-                -webkit-animation: blur 6s forwards;
+                -webkit-animation: blur 3s forwards;
             }
 
             @-webkit-keyframes blur {
-                100% {
-                    min-width:0vw;
-                    max-height: 100vh;
-                    top: -0vh;
-                }  50%  {
-                    min-width:101vw;
-                    max-height: 1000vh;
-                    top: -0vh;
+                100%  {
+                    bottom: 0vh;
                     -webkit-filter: blur(0px);
                 } 0% {
+                    bottom:-20vh;
                     -webkit-filter: blur(10px);
                 }
             }
@@ -67,21 +65,36 @@
                 left: 0%;
                 height: 100%;
             }
+            #contact {
+                position: absolute;
+                right: 0px;
+                bottom: 900vh;
+                height:50vh;
+                top:-700vh;
+                width: 80vh;
+                background-color: rgba(255,255,255,0.5);
+                margin-right: 0px;
+            }
+            #contact > a {
+                /*display: block;
+                font-size: 5vh;
+                width: 100%;*/
+            }
         </style>
         <!--Welcome page-->
-        <app-drawer-layout>
-            <paper-page pageNumber="0" id="welcomePage">
+        <app-drawer-layout id="container">
+            <paper-page pageNumber="0" id="welcomePage" scroll-target="container">
                 <img src="./images/welcomeLetter.png" id="welcomeLetter" style="z-index:1000;" />
-                <img src="./images/welcomeBgAlone.jpg"  id="welcomeBg"  class="flex"/>
+                <img src="./images/fullPicture.jpg"  id="welcomeBg"  class="flex"/>
                 <paper-icon-button id="scrollButton" icon="my-icons:wait" style="z-index:10000;"></paper-icon-button>
-            </paper-page/>
-            <!--Contact page-->
-            <paper-page pageNumber="1" id="contactPage">
-                <img src="./images/fullPicture.jpg" id="fullPicture" />
-                <div id="contact">
+                <div id="contact" class="layout horizontal center justified">
                     <a href="contact@badouin.fr">contact@badouin.fr</a>
                 </div>
             </paper-page/>
+            <!--Contact page-->
+            <!--<paper-page pageNumber="1" id="contactPage">
+                <img src="./images/fullPicture.jpg" id="fullPicture" />
+            </paper-page/>-->
         </app-drawer-layout>
 </template>
 
@@ -98,14 +111,93 @@ class BendouApp extends Polymer.Element {
             prop1: {
                 type: String,
                 value: 'bendou-app'
+            },
+            currentMinWidth: {
+                type: Number,
+                value: 600
+            },
+            animationFinished: {
+                type:Number,
+                value:0
+            },
+            finalContactTop: {
+                type:Number,
+                value:25
+            },
+            animationState: {
+                type:Number,
+                value:0 //0 => before, 1 => doing, 2 => after
             }
         };
     }
     ready() {
         super.ready();
-        console.log('ready');
-        //Promise.all(this.$.welcomeBg.getAnimations().map()
-        setTimeout(this.$.welcomeBg.scaleDown(), 3000);
+        setTimeout(this.setEndOfAnimation.bind(this), 3000);
+        this.$.welcomeLetter.style.top = "0px";
+        this.$.contact.style.top = "-700vh";
+        this.addEventListener("wheel", function(e) {
+            //var maxHeight = parseFloat(this.$.welcomeBg.style.maxHeight.slice(0,-2));
+            var speed = parseFloat(e.wheelDeltaY / 100) * 10;
+            var welcomeBg = this.$.welcomeBg.style;
+            var contact = this.$.contact.style;
+            var welcomeLetter = this.$.welcomeLetter.style;
+            var top = parseFloat(welcomeLetter.top.slice(0, -2));
+            var topContact = parseFloat(contact.top.slice(0, -2));
+            var maxHeight = parseFloat(welcomeBg.maxHeight);
+            // The fake scroll need to start after the end of the animation set to 3s
+            if(this.animationFinished == 1) {
+                if(this.currentMinWidth != 600 && speed > 0) {
+                    // scroll to the top so have to increase the size of the picture
+                    this.currentMinWidth = this.currentMinWidth + speed;
+                    //remove the logo
+                    if(top < 0)
+                        welcomeLetter.top = (top + 0.5*speed) + 'vh';
+                    else
+                        welcomeLetter.top = "0vh";
+                    //display contact
+                    topContact = parseFloat(contact.top.slice(0,-2));
+                    console.log(topContact);
+                    if(topContact > -700) {
+                        contact.top = topContact - 1.7*speed + "vh";
+                    }
+
+                    if(this.currentMinWidth > 600) {
+                        this.currentMinWidth = 600;
+                        welcomeLetter.top = "0vh"
+                    }
+                    // size of the picture
+                    welcomeBg.minWidth = this.currentMinWidth + 'vh';
+                    welcomeBg.maxHeight = this.currentMinWidth + 'vh';
+                } else if (this.currentMinWidth != 0 && speed < 0) {
+                    // scroll to the bottom so have to decrease the size of the picture
+                    this.currentMinWidth = this.currentMinWidth + speed;
+                    if(this.currentMinWidth < 100) {
+                        this.currentMinWidth = 100;
+                    }
+                    welcomeBg.minWidth = this.currentMinWidth + 'vh';
+                    welcomeBg.maxHeight = this.currentMinWidth + 'vh';
+                    if(top > - 600*0.2)
+                        welcomeLetter.top = (top + 0.2*speed) + 'vh';
+
+                    //display contact
+                    topContact = parseFloat(contact.top.slice(0,-2));
+                    console.log(topContact);
+                    if(topContact < this.finalContactTop) {
+                        var fin = topContact - 1.7 * speed;
+                        if(fin > this.finalContactTop)
+                            contact.top = this.finalContactTop + 'vh';
+                        else
+                            contact.top = fin  + "vh";
+                    }
+                }
+                //update the html element
+                this.updateStyles();
+            }
+        });
+    }
+
+    setEndOfAnimation() {
+        this.animationFinished = 1;
     }
 }
 
