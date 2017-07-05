@@ -1,0 +1,46 @@
+<link rel="import" href="../../bower_components/polymer/polymer-element.html">
+<dom-module id="scaledown-img">
+    <template>
+        <style>
+            :host {
+                display: block;
+            }
+
+            img {
+                /*Sizing*/
+                min-width: 101%;
+                top: 0;
+                min-height: 100vh;
+            }
+        </style>
+        <img src="./images/welcomeBgAlone.jpg" />
+    </template>
+    <script>
+        class ScaledownImg extends Polymer.Element {
+            static get is() { return 'scaledown-img'; }
+            static get properties() {
+                return {
+                    prop1: {
+                        type: String,
+                        value: 'scaledown-img'
+                    }
+                };
+            }
+            ready() {
+                super.ready();
+                console.log('ready scaleDown');
+            }
+
+            scaleDown() {
+                console.log('scaleDown');
+                /*this.animate(
+                    {
+                        transform: ['scale(1)', 'scale(0.5)']
+                    }, 3000
+                );*/
+            }
+        }
+
+        window.customElements.define(ScaledownImg.is, ScaledownImg);
+    </script>
+</dom-module>

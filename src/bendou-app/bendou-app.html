@@ -1,11 +1,12 @@
 <link rel="import" href="../../bower_components/polymer/polymer-element.html">
-
+<link rel="import" href="../../bower_components/iron-flex-layout/iron-flex-layout-classes.html">
 <link rel="import" href="../../src/paper-page/paper-page.html">
+<link rel="import" href="../../src/scaledown-img/scaledown-img.html">
 <!--<link rel="import" href="scrollIcon.html">-->
 
 <dom-module id="bendou-app">
     <template>
-            <style>
+            <style include="iron-flex iron-flex-alignment iron-positioning">
             :host {
                 display: block;
                 position: inherit;
@@ -28,16 +29,24 @@
                 z-index: 0;
 
                 /*Sizing*/
-                min-width: 100%;
-                top: 0;
+                min-width: 101vw;
+                top: -33vh;
                 min-height: 100vh;
+                max-height: 1000vh;
 
                 /*Animation*/
-                -webkit-animation: blur 3s forwards;
+                -webkit-animation: blur 6s forwards;
             }
 
             @-webkit-keyframes blur {
-                100%  {
+                100% {
+                    min-width:0vw;
+                    max-height: 100vh;
+                    top: -0vh;
+                }  50%  {
+                    min-width:101vw;
+                    max-height: 1000vh;
+                    top: -0vh;
                     -webkit-filter: blur(0px);
                 } 0% {
                     -webkit-filter: blur(10px);
@@ -60,14 +69,14 @@
             }
         </style>
         <!--Welcome page-->
-        <app-drawer-layout fullbleed>
-            <paper-page pageNumber="0" id="welcomePage" class="fullbleed layout vertical">
-                <img src="./images/welcomeLetter.png" id="welcomeLetter" style="z-index:1000;" class="flex" />
+        <app-drawer-layout>
+            <paper-page pageNumber="0" id="welcomePage">
+                <img src="./images/welcomeLetter.png" id="welcomeLetter" style="z-index:1000;" />
                 <img src="./images/welcomeBgAlone.jpg"  id="welcomeBg"  class="flex"/>
                 <paper-icon-button id="scrollButton" icon="my-icons:wait" style="z-index:10000;"></paper-icon-button>
             </paper-page/>
             <!--Contact page-->
-            <paper-page pageNumber="1" id="contactPage" fullbleed>
+            <paper-page pageNumber="1" id="contactPage">
                 <img src="./images/fullPicture.jpg" id="fullPicture" />
                 <div id="contact">
                     <a href="contact@badouin.fr">contact@badouin.fr</a>
@@ -91,6 +100,12 @@ class BendouApp extends Polymer.Element {
                 value: 'bendou-app'
             }
         };
+    }
+    ready() {
+        super.ready();
+        console.log('ready');
+        //Promise.all(this.$.welcomeBg.getAnimations().map()
+        setTimeout(this.$.welcomeBg.scaleDown(), 3000);
     }
 }
 
