@@ -1,43 +1,99 @@
 <link rel="import" href="../../bower_components/polymer/polymer-element.html">
 
+<link rel="import" href="../../src/paper-page/paper-page.html">
+<!--<link rel="import" href="scrollIcon.html">-->
+
 <dom-module id="bendou-app">
-  <template>
-    <style>
-      :host {
-        display: block;
-      }
-    </style>
-    <h2 id="fuck">Hello [[prop1]]!</h2>
-  </template>
-  <script>
-    /**
-     * @customElement
-     * @polymer
-     */
-    class BendouApp extends Polymer.Element {
-      static get is() { return 'bendou-app'; }
-      static get properties() {
+    <template>
+            <style>
+            :host {
+                display: block;
+                position: inherit;
+                background-color: white;
+            }
+
+
+            #welcomePage > * {
+                /*Positioning*/
+                position: absolute;
+                display: block;
+                left: 0;
+                right: 0;
+                margin-left: auto;
+                margin-right: auto;
+            }
+
+            #welcomeBg {
+                /*Positioning*/
+                z-index: 0;
+
+                /*Sizing*/
+                min-width: 100%;
+                top: 0;
+                min-height: 100vh;
+
+                /*Animation*/
+                -webkit-animation: blur 3s forwards;
+            }
+
+            @-webkit-keyframes blur {
+                100%  {
+                    -webkit-filter: blur(0px);
+                } 0% {
+                    -webkit-filter: blur(10px);
+                }
+            }
+
+            #scrollButton {
+                bottom: 7%;
+                width: 75px;
+                height: 75px;
+            }
+
+            #contactSection {
+                background-color: white;
+            }
+            #fullPicture {
+                float: left;
+                left: 0%;
+                height: 100%;
+            }
+        </style>
+        <!--Welcome page-->
+        <app-drawer-layout fullbleed>
+            <paper-page pageNumber="0" id="welcomePage" class="fullbleed layout vertical">
+                <img src="./images/welcomeLetter.png" id="welcomeLetter" style="z-index:1000;" class="flex" />
+                <img src="./images/welcomeBgAlone.jpg"  id="welcomeBg"  class="flex"/>
+                <paper-icon-button id="scrollButton" icon="my-icons:wait" style="z-index:10000;"></paper-icon-button>
+            </paper-page/>
+            <!--Contact page-->
+            <paper-page pageNumber="1" id="contactPage" fullbleed>
+                <img src="./images/fullPicture.jpg" id="fullPicture" />
+                <div id="contact">
+                    <a href="contact@badouin.fr">contact@badouin.fr</a>
+                </div>
+            </paper-page/>
+        </app-drawer-layout>
+</template>
+
+
+<script>
+/**
+* @customElement
+* @polymer
+*/
+class BendouApp extends Polymer.Element {
+    static get is() { return 'bendou-app'; }
+    static get properties() {
         return {
-          prop1: {
-            type: String,
-            value: 'bendou-app'
-          }
+            prop1: {
+                type: String,
+                value: 'bendou-app'
+            }
         };
-
-        ready() {
-
-        }
-
-        ready() {
-          super.ready();
-          Polymer.RenderStatus.afterNextRender(this,function() {
-
-          });
-
-        }
-      }
     }
+}
 
-    window.customElements.define(BendouApp.is, BendouApp);
-  </script>
+window.customElements.define(BendouApp.is, BendouApp);
+</script>
 </dom-module>

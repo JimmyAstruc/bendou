@@ -1,0 +1,38 @@
+<link rel="import" href="../../bower_components/polymer/polymer-element.html">
+
+<dom-module id="paper-page">
+    <template>
+        <style>
+            :host {
+                display: block;
+                position: relative;
+                background-color: white;
+                height: 100vh;
+                max-height: 100vh;
+                width: 100%;
+                overflow: hidden;
+            }
+        </style>
+        <slot></slot>
+    </template>
+
+    <script>
+        /**
+        * @customElement
+        * @polymer
+        */
+        class PaperPage extends Polymer.Element {
+            static get is() { return 'paper-page'; }
+            static get properties() {
+                return {
+                    pageNumber: {
+                        type: Number,
+                        value: 0
+                    }
+                };
+            }
+        }
+
+        window.customElements.define(PaperPage.is, PaperPage);
+    </script>
+</dom-module>
